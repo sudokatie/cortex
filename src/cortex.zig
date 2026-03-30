@@ -19,6 +19,8 @@ pub const sgd = @import("optim/sgd.zig");
 pub const adam = @import("optim/adam.zig");
 pub const sequential = @import("model/sequential.zig");
 pub const random = @import("util/random.zig");
+pub const loader = @import("data/loader.zig");
+pub const mnist = @import("data/mnist.zig");
 pub const Tensor = tensor.Tensor;
 pub const Dense = dense.Dense;
 pub const ReLU = relu.ReLU;
@@ -33,6 +35,9 @@ pub const Sequential = sequential.Sequential;
 pub const Layer = sequential.Layer;
 pub const Random = random.Random;
 pub const WeightInit = random.WeightInit;
+pub const Dataset = loader.Dataset;
+pub const DataLoader = loader.DataLoader;
+pub const MNIST = mnist.MNIST;
 
 // Module exports will be added as implemented:
 // pub const layers = @import("layers/layer.zig");
@@ -59,4 +64,6 @@ test {
     _ = adam;
     _ = sequential;
     _ = random;
+    _ = loader;
+    _ = mnist;
 }
