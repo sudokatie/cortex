@@ -7,6 +7,7 @@ pub const tensor = @import("tensor/tensor.zig");
 pub const ops = @import("tensor/ops.zig");
 pub const matmul = @import("tensor/matmul.zig");
 pub const reduce = @import("tensor/reduce.zig");
+pub const broadcast = @import("tensor/broadcast.zig");
 pub const Tensor = tensor.Tensor;
 
 // Module exports will be added as implemented:
@@ -22,4 +23,5 @@ test {
     _ = ops;
     _ = matmul;
     _ = reduce;
+    _ = broadcast;
 }
