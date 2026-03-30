@@ -72,8 +72,20 @@ pub fn build(b: *std.Build) void {
     });
     const run_xor_tests = b.addRunArtifact(xor_tests);
 
+    const mnist_test_mod = b.createModule(.{
+        .root_source_file = b.path("tests/mnist_mlp_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    mnist_test_mod.addImport("cortex", cortex_mod);
+    const mnist_tests = b.addTest(.{
+        .root_module = mnist_test_mod,
+    });
+    const run_mnist_tests = b.addRunArtifact(mnist_tests);
+
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_exe_unit_tests.step);
     test_step.dependOn(&run_xor_tests.step);
+    test_step.dependOn(&run_mnist_tests.step);
 }
