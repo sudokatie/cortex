@@ -4,12 +4,12 @@
 /// No autograd - every gradient is computed manually.
 
 pub const tensor = @import("tensor/tensor.zig");
+pub const ops = @import("tensor/ops.zig");
+pub const matmul = @import("tensor/matmul.zig");
+pub const reduce = @import("tensor/reduce.zig");
 pub const Tensor = tensor.Tensor;
 
 // Module exports will be added as implemented:
-// pub const ops = @import("tensor/ops.zig");
-// pub const matmul = @import("tensor/matmul.zig");
-// pub const reduce = @import("tensor/reduce.zig");
 // pub const layers = @import("layers/layer.zig");
 // pub const activations = @import("activations/activation.zig");
 // pub const losses = @import("losses/loss.zig");
@@ -19,4 +19,7 @@ pub const Tensor = tensor.Tensor;
 
 test {
     _ = tensor;
+    _ = ops;
+    _ = matmul;
+    _ = reduce;
 }
