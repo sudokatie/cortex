@@ -9,8 +9,14 @@ pub const matmul = @import("tensor/matmul.zig");
 pub const reduce = @import("tensor/reduce.zig");
 pub const broadcast = @import("tensor/broadcast.zig");
 pub const dense = @import("layers/dense.zig");
+pub const relu = @import("activations/relu.zig");
+pub const sigmoid = @import("activations/sigmoid.zig");
+pub const tanh_act = @import("activations/tanh.zig");
 pub const Tensor = tensor.Tensor;
 pub const Dense = dense.Dense;
+pub const ReLU = relu.ReLU;
+pub const Sigmoid = sigmoid.Sigmoid;
+pub const Tanh = tanh_act.Tanh;
 
 // Module exports will be added as implemented:
 // pub const layers = @import("layers/layer.zig");
@@ -27,4 +33,7 @@ test {
     _ = reduce;
     _ = broadcast;
     _ = dense;
+    _ = relu;
+    _ = sigmoid;
+    _ = tanh_act;
 }
