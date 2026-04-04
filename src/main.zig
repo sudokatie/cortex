@@ -2,32 +2,30 @@ const std = @import("std");
 const cortex = @import("cortex.zig");
 
 pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
-    
     var args = std.process.args();
     _ = args.skip(); // skip program name
     
     const command = args.next() orelse {
-        try printUsage(stdout);
+        printUsage();
         return;
     };
     
     if (std.mem.eql(u8, command, "train")) {
-        try stdout.print("Training not yet implemented\n", .{});
+        std.debug.print("Training not yet implemented\n", .{});
     } else if (std.mem.eql(u8, command, "infer")) {
-        try stdout.print("Inference not yet implemented\n", .{});
+        std.debug.print("Inference not yet implemented\n", .{});
     } else if (std.mem.eql(u8, command, "info")) {
-        try printInfo(stdout);
+        printInfo();
     } else if (std.mem.eql(u8, command, "--help") or std.mem.eql(u8, command, "-h")) {
-        try printUsage(stdout);
+        printUsage();
     } else {
-        try stdout.print("Unknown command: {s}\n", .{command});
-        try printUsage(stdout);
+        std.debug.print("Unknown command: {s}\n", .{command});
+        printUsage();
     }
 }
 
-fn printUsage(writer: anytype) !void {
-    try writer.print(
+fn printUsage() void {
+    std.debug.print(
         \\cortex - Neural network library
         \\
         \\USAGE:
@@ -44,8 +42,8 @@ fn printUsage(writer: anytype) !void {
     , .{});
 }
 
-fn printInfo(writer: anytype) !void {
-    try writer.print(
+fn printInfo() void {
+    std.debug.print(
         \\cortex v0.1.0
         \\Neural network library from scratch
         \\
