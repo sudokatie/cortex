@@ -1,0 +1,93 @@
+# Cortex
+
+Neural network library from scratch in Zig. No autograd magic - every gradient is computed explicitly.
+
+## Why?
+
+Because sometimes you want to see every matrix multiply. Every backpropagation step. Every weight update. This isn't for production ML (use PyTorch for that). This is for understanding how neural networks actually work.
+
+## Features
+
+- **Tensors** - Multi-dimensional arrays with broadcasting, matmul, reductions
+- **Layers** - Dense (fully connected) with Xavier initialization
+- **Activations** - ReLU, Sigmoid, Tanh, Softmax
+- **Losses** - Cross-entropy, MSE
+- **Optimizers** - SGD (with momentum), Adam
+- **Models** - Sequential container for stacking layers
+- **Serialization** - Save/load trained models to binary format
+
+## Quick Start
+
+```zig
+const cortex = @import("cortex");
+
+// Build model
+var model = cortex.Sequential.init(allocator);
+defer model.deinit();
+
+var dense1 = try cortex.Dense.init(allocator, 784, 128);
+defer dense1.deinit();
+var relu = cortex.ReLU.init(allocator);
+defer relu.deinit();
+var dense2 = try cortex.Dense.init(allocator, 128, 10);
+defer dense2.deinit();
+
+try model.addDense(&dense1);
+try model.addReLU(&relu);
+try model.addDense(&dense2);
+
+// Forward pass
+var output = try model.forward(&input);
+defer output.deinit();
+```
+
+## Model Serialization
+
+Save and load trained models:
+
+```zig
+// Save model
+try cortex.save(&model, "model.crtx");
+
+// Load model
+var loaded = try cortex.load(allocator, "model.crtx");
+defer {
+    for (loaded.layers.items) |layer| {
+        switch (layer) {
+            .dense => |d| { d.deinit(); allocator.destroy(d); },
+            .relu => |r| { r.deinit(); allocator.destroy(r); },
+            .sigmoid => |s| { s.deinit(); allocator.destroy(s); },
+            .tanh => |t| { t.deinit(); allocator.destroy(t); },
+        }
+    }
+    loaded.deinit();
+}
+```
+
+### File Format
+
+Binary format with magic bytes `CRTX`:
+- Header: magic (4 bytes) + version (4 bytes) + layer count (4 bytes)
+- Per layer: type (1 byte) + layer-specific data
+- Dense layers store dimensions + weights + bias as raw f32
+
+## Testing
+
+```bash
+zig build test
+```
+
+## Constraints
+
+- Pure Zig (no external dependencies)
+- f32 only (no mixed precision)
+- CPU only (GPU support planned for v0.2)
+- No autograd - gradients are explicit
+
+## License
+
+MIT
+
+---
+
+Built by Katie.
