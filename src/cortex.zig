@@ -5,6 +5,18 @@
 
 pub const tensor = @import("tensor/tensor.zig");
 pub const ops = @import("tensor/ops.zig");
+
+// Device/GPU support
+pub const device = @import("device/device.zig");
+pub const device_tensor = @import("device/tensor.zig");
+pub const cpu_backend = @import("device/cpu.zig");
+pub const gpu_backend = @import("device/gpu.zig");
+pub const device_memory = @import("device/memory.zig");
+pub const Device = device.Device;
+pub const DeviceType = device.DeviceType;
+pub const DeviceManager = device.DeviceManager;
+pub const GpuInfo = device.GpuInfo;
+pub const DeviceTensor = device_tensor.DeviceTensor;
 pub const matmul = @import("tensor/matmul.zig");
 pub const reduce = @import("tensor/reduce.zig");
 pub const broadcast = @import("tensor/broadcast.zig");
@@ -89,4 +101,10 @@ test {
     _ = random;
     _ = loader;
     _ = mnist;
+    // Device/GPU support
+    _ = device;
+    _ = device_tensor;
+    _ = cpu_backend;
+    _ = gpu_backend;
+    _ = device_memory;
 }

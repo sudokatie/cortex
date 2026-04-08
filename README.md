@@ -9,12 +9,13 @@ Because sometimes you want to see every matrix multiply. Every backpropagation s
 ## Features
 
 - **Tensors** - Multi-dimensional arrays with broadcasting, matmul, reductions
-- **Layers** - Dense (fully connected) with Xavier initialization
+- **Layers** - Dense, Conv2D, BatchNorm, Dropout, Attention
 - **Activations** - ReLU, Sigmoid, Tanh, Softmax
 - **Losses** - Cross-entropy, MSE
 - **Optimizers** - SGD (with momentum), Adam
 - **Models** - Sequential container for stacking layers
 - **Serialization** - Save/load trained models to binary format
+- **GPU Support** - Device abstraction with automatic CPU fallback
 
 ## Quick Start
 
@@ -77,11 +78,40 @@ Binary format with magic bytes `CRTX`:
 zig build test
 ```
 
+## GPU Support
+
+The device module provides a backend abstraction for GPU acceleration:
+
+```zig
+const cortex = @import("cortex");
+
+// Create tensor on specific device
+var t = try cortex.DeviceTensor.initGpu(allocator, &[_]usize{1024, 1024}, 0);
+defer t.deinit();
+
+// Move tensor between devices
+try t.toCpu();
+
+// Operations fall back to CPU automatically when GPU unavailable
+var a = try cortex.DeviceTensor.zeros(allocator, &[_]usize{4}, cortex.Device.cpu);
+var b = try cortex.DeviceTensor.ones(allocator, &[_]usize{4}, cortex.Device.cpu);
+var out = try cortex.DeviceTensor.init(allocator, &[_]usize{4}, cortex.Device.cpu);
+try cortex.device_tensor.add(&a, &b, &out);
+```
+
+### Backend Architecture
+
+- **Device** - CPU or GPU identifier with index
+- **Backend** - Interface for memory allocation and operations
+- **DeviceTensor** - GPU-aware tensor with automatic device management
+- **Fallback** - Operations automatically fall back to CPU when GPU unavailable
+
+GPU backends (Vulkan compute) are stubbed for future implementation. All operations work on CPU by default.
+
 ## Constraints
 
 - Pure Zig (no external dependencies)
 - f32 only (no mixed precision)
-- CPU only (GPU support planned for v0.2)
 - No autograd - gradients are explicit
 
 ## License
